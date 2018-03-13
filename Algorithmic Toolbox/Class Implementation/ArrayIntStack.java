@@ -1,8 +1,3 @@
-// Wonsik Nam
-// November 7th, 2017
-// CS 211
-// Assignment #15
-
 import java.util.*;
 
 /**
