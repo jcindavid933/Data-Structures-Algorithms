@@ -3,121 +3,113 @@ import java.util.TreeSet;
 
 public class CharCount {
 
-// Data Fields
-// Establishes the three sets of data
-	private TreeSet<CharInt> charSet;
-	private TreeSet<CharInt> countSet;
-	private static TreeSet<CharInt> outputSet = new TreeSet<CharInt>(new CharInt());
+	// DATA FIELDS
+	private TreeSet<CharInt> charCompSet;
+	private TreeSet<CharInt> countCompSet;
+	private static TreeSet<CharInt> outputSet = new TreeSet<CharInt>(new SortByCount());
 
-// Default Constructor
+	// CONSTRUCTOR:
 	public CharCount() {
-		charSet = new TreeSet<CharInt>(new CharInt());
-		countSet = new TreeSet<CharInt>(new CharInt());
+		charCompSet = new TreeSet<CharInt>(new SortByChar());
+		countCompSet = new TreeSet<CharInt>(new SortByCount());
 	}
 
-// Parameterized Constructor
+	// PARAMETERIZED CONSTRUCTORS:
+	// Constructor used by external class. Generates a CharCount object using a Scanner for input.
 	public CharCount(Scanner caughtScanner) {
-		charSet = new TreeSet<CharInt>(new CharInt());
-		countSet = new TreeSet<CharInt>(new CharInt());
+		charCompSet = new TreeSet<CharInt>(new SortByChar());
+		countCompSet = new TreeSet<CharInt>(new SortByCount());
 		caughtScanner.useDelimiter("");
 		while (caughtScanner.hasNext()) {
-// Takes off the first letter of the Scanner as a String, makes it an uppercase, and then converts it to a char
+		// Snips off the first letter of the Scanner as a String, uppercase it, and convert it to a char.
 			char randomChar = caughtScanner.next().toUpperCase().charAt(0);
-			CharInt randomCharInt = new CharInt(0, randomChar);
-// Attempt to add a new CharInt to the set
-			charSet.add(randomCharInt);
-// If there is a match, it increments that CharInt occurrenceCounter by 1.
-			for (CharInt x : charSet) {
+			CharInt randomCharInt = new CharInt(randomchar, 0);
+			charCompSet.add(randomCharInt);
+			for (CharInt x : charCompSet) {
 				if (x.getChar() == randomChar) {
 					x.setCount(x.getCount()+1);
-				} 
+				}
 			}
-		} 
-		
-// We can now populate the TreeSet that sorts by occurrence counts
-		for (CharInt x : charSet) {
-			countSet.add(new CharInt(x.getCount(), x.getChar()));
+		}
+		// Occurrence counts in hand, we can now populate the TreeSet that sorts by occurrence counts
+		for (CharInt x : charCompSet) {
+			countCompSet.add(new CharInt(x.getChar(), x.getCount()));
 		}
 	}
+	// Count comparison set has been created at this point.
 	
-// Methods
+	// METHODS:
 	public int size() {
-		return(countSet.size());
+		return(countCompSet.size());
 	}
 
+	// All calls to CharCount class objects to convert to Strings will reference this behavior.
 	@Override
 	public String toString() {
-// In the event that there are no characters to display
-		if (countSet.isEmpty()) {
+		// In the event that there are no characters to display
+		if ( countCompSet.isEmpty() ) {
 			return "{ }";
 		}
-// If there are characters in the set
+		// If there are characters in the set:
 		else {
+			// Goal is "{ CHAR1=COUNT1, CHAR2=COUNT2 }"
 			String stringOutput = "{ ";
-			for (CharInt x : countSet) {
-// Append all String representations of the CharInt to the overall String
+			for (CharInt x : countCompSet) {
+			// Append all String representations of the CharInt to the overall String.
 				stringOutput = stringOutput + x + ", ";
 			}
-			StringBuilder randomStringBuilder = new StringBuilder(stringOutput);
-// Reduce the String length by 2.
-			randomStringBuilder.setLength(randomStringBuilder.length()-2);
-// Add the closing curly brace to the string
-			stringOutput = randomStringBuilder.toString() + " }";
+			StringBuilder someStringBuilder = new StringBuilder(stringOutput);
+			someStringBuilder.setLength(someStringBuilder.length()-2);
+			stringOutput = someStringBuilder.toString() + " }";
 			return(stringOutput);
 		}
 	}
 
-// Returns the full TreeSet of CharInts contained within a CharCount object
+	// Returns the full TreeSet of CharInts contained within a CharCount object.
 	public CharCount getCounts() {
 		CharCount returnCollection = new CharCount();
-// Reads fields from the database and uses this to construct a new CharCount object
-		for ( CharInt x : countSet ) {
-			returnCollection.countSet.add(new CharInt(x.getCount(), x.getChar()));
+		for ( CharInt x : countCompSet ) {
+			returnCollection.countCompSet.add(new CharInt(x.getChar(), x.getCount()));
 		}
 		return (returnCollection);
 	}
 
-// Returns the top or bottom values of the sorted set proportional to the received argument
-	public CharCount getCounts(int someInt) {
+	// Returns the top or bottom values of the sorted set proportional to the received argument.
+	// Returns the full set if the argument asks for more values than are present in the list.
+	public CharCount getCounts(int randomInt) {
 		CharCount returnCollection = new CharCount();
-// First, clear the scratchpad
 		outputSet.clear();
-// Then populate the scratchpad with new CharInts
-		for (CharInt x : countSet ) {
-			outputSet.add(new CharInt(x.getCount(), x.getChar()));
+		for (CharInt x : countCompSet ) {
+			outputSet.add(new CharInt(x.getChar(), x.getCount()));
 		}
-// If postive:
-		if (someInt > 0 && someInt <= countSet.size()) {
-			for (int i = 0; i < someInt; i++) {
-				returnCollection.countSet.add(outputSet.pollFirst());
+		// If positive:
+		if (randomInt > 0 && randomInt <= countCompSet.size()) {
+			for (int i = 0; i < randomInt; i++) {
+				returnCollection.countCompSet.add(outputSet.pollFirst());
 			}
 		}
-// If negative:
-		else if (someInt < 0 && Math.abs(someInt) <= countSet.size()) {
-			for (int i = someInt; i < 0; i++) {
-				returnCollection.countSet.add(outputSet.pollLast());
+		// If negative
+		else if (randomInt < 0 && Math.abs(randomInt) <= countCompSet.size()) {
+			for (int i = randomInt; i < 0; i++) {
+				returnCollection.countCompSet.add(outputSet.pollLast());
 			}
 		}
-// If the argument exceeds the size of the set
-		else if (Math.abs(someInt) > countSet.size()) {
-			returnCollection.countSet = outputSet;
+		// If the argument exceeds the size of the set:
+		else if (Math.abs(randomInt) > countCompSet.size()) {
+			returnCollection.countCompSet = outputSet;
 		}
 		return (returnCollection);
 	}
-	
-// Parameterized getCount method
-// Returns the integer count of the char
+
+	// Returns the integer count of the char
 	public int getCounts(char theChar) {
-// Uppercase the requested letter
+		// Uppercase the requested letter
 		char randomChar = Character.toUpperCase(theChar);
-// Iterate over all CharInts
-		for (CharInt x : countSet) {
+		for (CharInt x : countCompSet) {
 			if (x.getChar() == randomChar) {
-// Return the count of the char that matches
 				return(x.getCount());
 			}
 		}
-// Otherwise
 		return(0);
 	}
 }
