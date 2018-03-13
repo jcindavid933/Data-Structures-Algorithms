@@ -2,7 +2,7 @@ import java.util.Comparator;
 
 public class CharInt implements Comparable<CharInt>, Comparator<CharInt> {
 	// FIELDS
-  private int count;
+ 	private int count;
 	private char ascii;
 
 	// CONSTRUCTORS
